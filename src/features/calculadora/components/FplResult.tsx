@@ -44,7 +44,7 @@ export function FplResult({
     <GradientCard innerClassName="p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-foreground">Resultado FPL</h2>
-        <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-medium text-text-secondary">
+        <span className="rounded-full border border-border bg-foreground/5 px-2.5 py-0.5 text-[10px] font-medium text-text-secondary">
           Guías HHS {FPL_YEAR}
         </span>
       </div>
@@ -53,9 +53,9 @@ export function FplResult({
         <CountUp
           value={hasMembers ? percent : 0}
           format={formatPercent}
-          className="block bg-gradient-to-r from-neon-magenta to-neon-violet bg-clip-text text-5xl font-bold tracking-tight text-transparent"
+          className="block bg-gradient-to-r from-brand to-brand-2 bg-clip-text text-5xl font-bold tracking-tight text-transparent"
         />
-        <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+        <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-border bg-foreground/5 px-3 py-1">
           <span
             className="size-2 rounded-full"
             style={{ backgroundColor: band.color, boxShadow: `0 0 8px ${band.color}` }}
@@ -92,7 +92,7 @@ export function FplResult({
           onClick={onSave}
           disabled={!hasMembers || saving}
           size="lg"
-          className="flex-1 gap-2 rounded-xl bg-gradient-to-r from-neon-magenta to-neon-violet text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(201,62,255,0.35)] disabled:opacity-40"
+          className="flex-1 gap-2 rounded-xl bg-gradient-to-r from-brand to-brand-2 text-brand-foreground transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_20px_var(--brand-glow)] disabled:opacity-40"
         >
           {saving ? <LoaderCircle className="size-4 animate-spin" /> : <Save className="size-4" />}
           {isEditing ? 'Actualizar cálculo' : 'Guardar cálculo'}
@@ -101,7 +101,7 @@ export function FplResult({
           onClick={onReset}
           variant="ghost"
           size="lg"
-          className="gap-2 rounded-xl text-text-secondary hover:bg-white/5 hover:text-foreground"
+          className="gap-2 rounded-xl text-text-secondary hover:bg-foreground/5 hover:text-foreground"
         >
           <RotateCcw className="size-4" />
           Nuevo cálculo

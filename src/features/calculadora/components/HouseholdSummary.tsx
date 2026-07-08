@@ -16,7 +16,7 @@ export function HouseholdSummary({
   onHouseholdSizeChange,
 }: HouseholdSummaryProps) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-card-bg p-5 sm:p-6">
+    <div className="rounded-2xl border border-border bg-card-bg p-5 sm:p-6">
       <div className="mb-4 flex items-center gap-2.5">
         <div className="flex size-8 items-center justify-center rounded-lg bg-neon-blue/10">
           <Wallet className="size-4 text-neon-blue" />
@@ -46,11 +46,11 @@ export function HouseholdSummary({
             onClick={() => onHouseholdSizeChange(householdSize - 1)}
             disabled={householdSize <= 1}
             aria-label="Reducir tamaño del hogar"
-            className="flex size-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-foreground transition-all duration-200 hover:border-white/20 hover:bg-white/[0.08] disabled:opacity-30"
+            className="flex size-9 items-center justify-center rounded-xl border border-border bg-foreground/[0.04] text-foreground transition-all duration-200 hover:border-foreground/20 hover:bg-foreground/[0.08] disabled:opacity-30"
           >
             <Minus className="size-4" />
           </button>
-          <div className="flex min-w-16 items-center justify-center gap-2 rounded-xl border border-white/10 bg-elevated px-4 py-2">
+          <div className="flex min-w-16 items-center justify-center gap-2 rounded-xl border border-border bg-elevated px-4 py-2">
             <Users className="size-4 text-neon-blue" />
             <span aria-live="polite" className="text-sm font-semibold text-foreground">
               {householdSize}
@@ -59,7 +59,7 @@ export function HouseholdSummary({
           <button
             onClick={() => onHouseholdSizeChange(householdSize + 1)}
             aria-label="Aumentar tamaño del hogar"
-            className="flex size-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-foreground transition-all duration-200 hover:border-white/20 hover:bg-white/[0.08]"
+            className="flex size-9 items-center justify-center rounded-xl border border-border bg-foreground/[0.04] text-foreground transition-all duration-200 hover:border-foreground/20 hover:bg-foreground/[0.08]"
           >
             <Plus className="size-4" />
           </button>

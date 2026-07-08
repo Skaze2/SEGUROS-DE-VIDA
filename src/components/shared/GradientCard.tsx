@@ -12,7 +12,7 @@ export function GradientCard({ children, className, innerClassName }: GradientCa
   return (
     <div
       className={cn(
-        'rounded-2xl bg-gradient-to-b from-neon-magenta/40 via-white/10 to-transparent p-px',
+        'rounded-2xl bg-gradient-to-b from-brand/40 via-foreground/10 to-transparent p-px',
         className,
       )}
     >

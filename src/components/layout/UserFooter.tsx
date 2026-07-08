@@ -22,7 +22,7 @@ export function UserFooter({ collapsed }: { collapsed: boolean }) {
       src={user.photoURL}
       alt={displayName}
       referrerPolicy="no-referrer"
-      className="size-9 shrink-0 rounded-full border border-white/10"
+      className="size-9 shrink-0 rounded-full border border-border"
     />
   ) : (
     <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-neon-blue to-neon-cyan text-xs font-semibold text-white">
@@ -52,7 +52,7 @@ export function UserFooter({ collapsed }: { collapsed: boolean }) {
   return (
     <div
       className={cn(
-        'flex items-center gap-2 border-t border-white/10 p-3',
+        'flex items-center gap-2 border-t border-border p-3',
         collapsed && 'flex-col',
       )}
     >

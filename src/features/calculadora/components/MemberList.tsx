@@ -25,7 +25,7 @@ export function MemberList({ members, onRemove }: MemberListProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.15 } }}
             exit={{ opacity: 0, transition: { duration: 0.1 } }}
-            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-10 text-center"
+            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-foreground/[0.03] px-4 py-10 text-center"
           >
             <Users className="size-6 text-text-secondary" />
             <p className="text-sm text-text-secondary">

@@ -98,10 +98,10 @@ export function CalculadoraPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="flex items-center justify-between gap-3 rounded-2xl border border-neon-magenta/30 bg-neon-magenta/10 px-4 py-3"
+            className="flex items-center justify-between gap-3 rounded-2xl border border-brand/30 bg-brand/10 px-4 py-3"
           >
             <p className="flex min-w-0 items-center gap-2 text-sm text-foreground">
-              <PencilLine className="size-4 shrink-0 text-neon-magenta" />
+              <PencilLine className="size-4 shrink-0 text-brand-strong" />
               <span className="truncate">
                 Editando: <span className="font-semibold">{session.title || 'Sin título'}</span>
               </span>
@@ -109,7 +109,7 @@ export function CalculadoraPage() {
             <button
               onClick={() => dispatch({ type: 'RESET_SESSION' })}
               aria-label="Cancelar edición"
-              className="flex size-7 shrink-0 items-center justify-center rounded-lg text-text-secondary transition-colors duration-200 hover:bg-white/10 hover:text-foreground"
+              className="flex size-7 shrink-0 items-center justify-center rounded-lg text-text-secondary transition-colors duration-200 hover:bg-foreground/10 hover:text-foreground"
             >
               <X className="size-4" />
             </button>

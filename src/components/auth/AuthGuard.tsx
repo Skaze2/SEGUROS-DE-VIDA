@@ -9,7 +9,7 @@ export function AuthGuard({ children }: { children: ReactNode }) {
   if (loading) {
     return (
       <div className="flex h-dvh items-center justify-center bg-background">
-        <LoaderCircle className="size-8 animate-spin text-neon-magenta" />
+        <LoaderCircle className="size-8 animate-spin text-brand-strong" />
       </div>
     )
   }

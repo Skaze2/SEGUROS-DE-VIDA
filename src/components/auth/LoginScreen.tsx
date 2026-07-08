@@ -57,7 +57,7 @@ export function LoginScreen() {
   return (
     <div className="relative flex h-dvh items-center justify-center overflow-hidden bg-background px-4">
       {/* Glows de fondo */}
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-neon-violet/25 blur-3xl" />
+      <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-brand/25 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-neon-blue/15 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 top-1/3 h-72 w-72 rounded-full bg-neon-coral/10 blur-3xl" />
 
@@ -65,10 +65,10 @@ export function LoginScreen() {
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
-        className="w-full max-w-sm rounded-2xl border border-white/10 bg-elevated/60 p-8 shadow-[0_0_60px_rgba(123,47,255,0.15)] backdrop-blur-xl"
+        className="w-full max-w-sm rounded-2xl border border-border bg-elevated/60 p-8 shadow-[0_0_60px_var(--brand-glow-soft)] backdrop-blur-xl"
       >
         <div className="flex flex-col items-center text-center">
-          <div className="mb-6 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-neon-magenta to-neon-violet shadow-[0_0_30px_rgba(201,62,255,0.45)]">
+          <div className="mb-6 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-brand-2 shadow-[0_0_30px_var(--brand-glow-strong)]">
             <ShieldCheck className="size-7 text-white" />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -81,7 +81,7 @@ export function LoginScreen() {
           <Button
             onClick={handleSignIn}
             disabled={signingIn}
-            className="mt-8 w-full gap-2 rounded-xl border border-white/10 bg-white/5 text-foreground transition-all duration-200 hover:scale-[1.02] hover:bg-white/10 hover:shadow-[0_0_20px_rgba(201,62,255,0.35)]"
+            className="mt-8 w-full gap-2 rounded-xl border border-border bg-foreground/5 text-foreground transition-all duration-200 hover:scale-[1.02] hover:bg-foreground/10 hover:shadow-[0_0_20px_var(--brand-glow)]"
             size="lg"
           >
             {signingIn ? <LoaderCircle className="size-4 animate-spin" /> : <GoogleIcon />}

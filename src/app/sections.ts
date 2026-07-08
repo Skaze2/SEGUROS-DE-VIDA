@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react'
-import { Calculator, type LucideIcon } from 'lucide-react'
+import { BookOpen, Calculator, MapPinned, type LucideIcon } from 'lucide-react'
 import { CalculadoraPage } from '@/features/calculadora/CalculadoraPage'
+import { DireccionesPage } from '@/features/direcciones/DireccionesPage'
+import { DiccionarioPage } from '@/features/diccionario/DiccionarioPage'
 
 export interface ToolSection {
   id: string
@@ -20,5 +22,17 @@ export const SECTIONS: ToolSection[] = [
     label: 'Calculadora de ingresos anual',
     icon: Calculator,
     component: CalculadoraPage,
+  },
+  {
+    id: 'direcciones',
+    label: 'Validador de direcciones USA',
+    icon: MapPinned,
+    component: DireccionesPage,
+  },
+  {
+    id: 'diccionario',
+    label: 'Diccionario de términos',
+    icon: BookOpen,
+    component: DiccionarioPage,
   },
 ]

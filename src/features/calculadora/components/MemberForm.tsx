@@ -71,7 +71,7 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-card-bg p-5 sm:p-6">
+    <div className="rounded-2xl border border-border bg-card-bg p-5 sm:p-6">
       <div className="mb-5 flex items-center gap-2.5">
         <div className="flex size-8 items-center justify-center rounded-lg bg-neon-cyan/10">
           <UserPlus className="size-4 text-neon-cyan" />
@@ -134,8 +134,8 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
                   className={cn(
                     'rounded-xl border px-3 py-2.5 text-left transition-all duration-200',
                     selected
-                      ? 'border-neon-magenta/40 bg-gradient-to-r from-neon-magenta/20 to-neon-violet/10 shadow-[0_0_20px_rgba(201,62,255,0.25)]'
-                      : 'border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]',
+                      ? 'border-brand/40 bg-gradient-to-r from-brand/20 to-brand-2/10 shadow-[0_0_20px_var(--brand-glow-soft)]'
+                      : 'border-border bg-foreground/[0.04] hover:border-foreground/20 hover:bg-foreground/[0.06]',
                   )}
                 >
                   <span
@@ -191,7 +191,7 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
           onClick={handleAdd}
           disabled={!canAdd}
           size="lg"
-          className="w-full gap-2 rounded-xl bg-gradient-to-r from-neon-magenta to-neon-violet text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(201,62,255,0.35)] disabled:opacity-40"
+          className="w-full gap-2 rounded-xl bg-gradient-to-r from-brand to-brand-2 text-brand-foreground transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_20px_var(--brand-glow)] disabled:opacity-40"
         >
           <Plus className="size-4" />
           Agregar al hogar

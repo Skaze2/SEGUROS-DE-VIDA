@@ -21,11 +21,11 @@ export function SidebarItem({ icon: Icon, label, active, collapsed, onClick }: S
         'flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm transition-all duration-200',
         collapsed && 'justify-center px-0',
         active
-          ? 'border-neon-magenta/30 bg-gradient-to-r from-neon-magenta/20 to-neon-violet/10 text-foreground shadow-[0_0_20px_rgba(201,62,255,0.25)]'
-          : 'border-transparent text-text-secondary hover:bg-white/5 hover:text-foreground',
+          ? 'border-brand/30 bg-gradient-to-r from-brand/20 to-brand-2/10 text-foreground shadow-[0_0_20px_var(--brand-glow-soft)]'
+          : 'border-transparent text-text-secondary hover:bg-foreground/5 hover:text-foreground',
       )}
     >
-      <Icon className={cn('size-5 shrink-0', active && 'text-neon-magenta')} />
+      <Icon className={cn('size-5 shrink-0', active && 'text-brand-strong')} />
       <AnimatePresence>
         {!collapsed && (
           <motion.span

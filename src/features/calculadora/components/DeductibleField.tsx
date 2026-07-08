@@ -14,7 +14,7 @@ interface DeductibleFieldProps {
 const MESSAGE_STYLES: Record<string, { className: string; icon: typeof CircleAlert }> = {
   invalid: { className: 'text-neon-coral', icon: CircleAlert },
   'sin-hogar': { className: 'text-neon-cyan', icon: UserRound },
-  'con-hogar': { className: 'text-neon-violet brightness-150', icon: Home },
+  'con-hogar': { className: 'text-brand-strong', icon: Home },
 }
 
 export function DeductibleField({ value, onChange, evaluation }: DeductibleFieldProps) {

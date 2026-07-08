@@ -32,7 +32,7 @@ export function Sidebar({ activeSectionId, onSelectSection }: SidebarProps) {
     <button
       onClick={toggle}
       aria-label={collapsed ? 'Expandir menú' : 'Contraer menú'}
-      className="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-secondary transition-colors duration-200 hover:bg-white/5 hover:text-foreground"
+      className="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-secondary transition-colors duration-200 hover:bg-foreground/5 hover:text-foreground"
     >
       {collapsed ? <PanelLeftOpen className="size-4.5" /> : <PanelLeftClose className="size-4.5" />}
     </button>
@@ -43,12 +43,12 @@ export function Sidebar({ activeSectionId, onSelectSection }: SidebarProps) {
       initial={false}
       animate={{ width: collapsed ? 72 : 260 }}
       transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-      className="flex h-full shrink-0 flex-col overflow-hidden border-r border-white/10 bg-card-bg/60 backdrop-blur-xl"
+      className="flex h-full shrink-0 flex-col overflow-hidden border-r border-border bg-card-bg/60 backdrop-blur-xl"
     >
       {/* Logo + toggle */}
       <div className={`flex items-center gap-2 p-4 ${collapsed ? 'flex-col' : 'justify-between'}`}>
         <div className="flex min-w-0 items-center gap-2.5">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-neon-magenta to-neon-violet shadow-[0_0_20px_rgba(201,62,255,0.35)]">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-2 shadow-[0_0_20px_var(--brand-glow)]">
             <ShieldCheck className="size-5 text-white" />
           </div>
           <AnimatePresence>

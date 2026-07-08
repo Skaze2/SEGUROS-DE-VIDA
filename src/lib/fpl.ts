@@ -25,13 +25,15 @@ export interface FplBand {
   color: string
 }
 
+// Escala salud/calma: cálido (bajo ingreso) → azul cielo/teal (alto ingreso).
+// Colores de saturación media: legibles como puntos y texto corto en ambos temas.
 export const FPL_BANDS: readonly FplBand[] = [
-  { max: 100, label: 'Menos de 100% FPL', color: '#FF3D6E' },
-  { max: 138, label: '100% – 138% FPL', color: '#FF8A3D' },
-  { max: 150, label: '138% – 150% FPL', color: '#2FD9FF' },
-  { max: 250, label: '150% – 250% FPL', color: '#2F6BFF' },
-  { max: 400, label: '250% – 400% FPL', color: '#7B2FFF' },
-  { max: Infinity, label: 'Más de 400% FPL', color: '#C93EFF' },
+  { max: 100, label: 'Menos de 100% FPL', color: '#F43F5E' },
+  { max: 138, label: '100% – 138% FPL', color: '#FB923C' },
+  { max: 150, label: '138% – 150% FPL', color: '#22D3EE' },
+  { max: 250, label: '150% – 250% FPL', color: '#38BDF8' },
+  { max: 400, label: '250% – 400% FPL', color: '#0EA5E9' },
+  { max: Infinity, label: 'Más de 400% FPL', color: '#2DD4BF' },
 ]
 
 export function fplBand(percent: number): FplBand {
