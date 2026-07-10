@@ -129,10 +129,12 @@ export function TelefonoPage({ initialPhone = '' }: { initialPhone?: string }) {
                     ) : (
                       <>
                         <p className="mt-1 flex items-center gap-1.5 text-xl font-bold tracking-tight text-foreground">
-                          <MapPin className="size-4 text-brand-strong" />
-                          {area.region}
+                          <MapPin className="size-4 shrink-0 text-brand-strong" />
+                          {area.state}
                         </p>
-                        <p className="text-sm text-text-secondary">{area.state}</p>
+                        <p className="mt-0.5 text-sm leading-snug text-text-secondary">
+                          {area.region === 'all' ? 'Todo el estado' : area.region}
+                        </p>
                       </>
                     )}
                   </div>
