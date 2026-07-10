@@ -31,8 +31,7 @@ import {
   type AddressFinding,
 } from '@/features/direcciones/addressTools'
 import { searchExistingStreets, type StreetSearchResult } from '@/features/direcciones/streetSearch'
-import { StateZipPanel } from '@/features/direcciones/StateZipPanel'
-import { stateMatchesZip } from '@/features/direcciones/zipRanges'
+import { ZipLookup } from '@/features/direcciones/components/ZipLookup'
 
 const EXAMPLES = [
   '33134 Main Street 123',
@@ -108,17 +107,10 @@ export function DireccionesPage() {
 
   const analysis = useMemo(() => analyzeAddress(address), [address])
   const globalResults = useMemo(() => searchAddressCatalog(catalogQuery), [catalogQuery])
-  const states = useMemo(() => {
-    const base = getCategoryResults(catalogQuery, STATE_ABBREVIATIONS)
-    const digits = catalogQuery.replace(/\D/g, '')
-    if (digits.length < 2) return base
-    // También filtra por código postal: escribir un ZIP o prefijo revela su estado
-    const seen = new Set(base.map((entry) => entry.abbr))
-    const byZip = STATE_ABBREVIATIONS.filter(
-      (state) => !seen.has(state.abbr) && stateMatchesZip(state.abbr, digits),
-    )
-    return [...base, ...byZip]
-  }, [catalogQuery])
+  const states = useMemo(
+    () => getCategoryResults(catalogQuery, STATE_ABBREVIATIONS),
+    [catalogQuery],
+  )
   const suffixes = useMemo(
     () => getCategoryResults(catalogQuery, STREET_SUFFIXES),
     [catalogQuery],
@@ -276,6 +268,10 @@ export function DireccionesPage() {
         </section>
       </motion.div>
 
+      <motion.div variants={fadeUp}>
+        <ZipLookup />
+      </motion.div>
+
       <motion.section
         variants={fadeUp}
         className="rounded-2xl border border-border bg-card-bg p-5 sm:p-6"
@@ -390,8 +386,7 @@ export function DireccionesPage() {
               <h2 className="text-sm font-semibold text-foreground">Buscador de abreviaturas</h2>
             </div>
             <p className="text-sm text-text-secondary">
-              Busca estados (con sus códigos postales), calles, unidades secundarias y
-              direccionales.
+              Busca estados, calles, unidades secundarias y direccionales.
             </p>
           </div>
           <div className="w-full sm:max-w-xs">
@@ -402,7 +397,7 @@ export function DireccionesPage() {
               id="catalog-search"
               value={catalogQuery}
               onChange={(event) => setCatalogQuery(event.target.value)}
-              placeholder="Ej: Florida, 33101, Street, Noroeste"
+              placeholder="Ej: Florida, Street, Noroeste"
               className="h-10 rounded-xl"
             />
           </div>
@@ -458,11 +453,7 @@ export function DireccionesPage() {
           })}
         </div>
 
-        {activeCatalog === 'states' ? (
-          <StateZipPanel entries={selectedCatalog.entries} />
-        ) : (
-          <CatalogPanel title={selectedCatalog.label} entries={selectedCatalog.entries} />
-        )}
+        <CatalogPanel title={selectedCatalog.label} entries={selectedCatalog.entries} />
       </motion.section>
     </motion.div>
   )

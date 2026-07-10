@@ -1,14 +1,19 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { CircleAlert, Plus, UserPlus } from 'lucide-react'
+import { CalendarRange, CircleAlert, Gauge, Plus, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { formatUSD, parseMoney, round2 } from '@/lib/money'
-import type { ContractType, Member } from '@/types/calculadora'
+import type { ContractType, IncomeMode, IncomePeriod, Member } from '@/types/calculadora'
 import { DeductibleField } from '@/features/calculadora/components/DeductibleField'
 import { evaluateDeductible, isValidDeductible } from '@/features/calculadora/deductible'
+import {
+  VariablePeriodsEditor,
+  nuevoPeriodo,
+} from '@/features/calculadora/components/VariablePeriodsEditor'
+import { totalVariableIncome } from '@/features/calculadora/incomeEstimation'
 
 interface MemberFormProps {
   members: Member[]
@@ -20,9 +25,16 @@ const CONTRACT_OPTIONS: { value: ContractType; label: string; hint: string }[] =
   { value: '1099', label: '1099', hint: 'Con deducibles' },
 ]
 
+const MODE_OPTIONS: { value: IncomeMode; label: string; hint: string; icon: typeof Gauge }[] = [
+  { value: 'estandar', label: 'Estándar', hint: 'Semanal fijo × 52', icon: Gauge },
+  { value: 'variable', label: 'Variable', hint: 'Por periodos del año', icon: CalendarRange },
+]
+
 export function MemberForm({ members, onAdd }: MemberFormProps) {
   const [name, setName] = useState('')
+  const [incomeMode, setIncomeMode] = useState<IncomeMode>('estandar')
   const [weeklyRaw, setWeeklyRaw] = useState('')
+  const [periods, setPeriods] = useState<IncomePeriod[]>(() => [nuevoPeriodo()])
   const [contractType, setContractType] = useState<ContractType>('W2')
   const [deductibleRaw, setDeductibleRaw] = useState('')
 
@@ -35,11 +47,21 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
     return (numbers.length > 0 ? Math.max(...numbers) : 0) + 1
   }, [members])
 
+  const isVariable = incomeMode === 'variable'
+
+  // Ingreso anual según el modo
   const weekly = parseMoney(weeklyRaw)
   const weeklyValid = Number.isFinite(weekly) && weekly > 0
-  // Anual calculado desde el semanal ya redondeado, para que semanal×52 = anual siempre
   const weeklyRounded = weeklyValid ? round2(weekly) : 0
-  const annualPreview = weeklyValid ? round2(weeklyRounded * 52) : null
+  const variableTotal = totalVariableIncome(periods)
+
+  const annualPreview = isVariable
+    ? variableTotal > 0
+      ? variableTotal
+      : null
+    : weeklyValid
+      ? round2(weeklyRounded * 52)
+      : null
 
   const is1099 = contractType === '1099'
   const deductibleEval = evaluateDeductible(deductibleRaw)
@@ -47,7 +69,8 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
   const deductibleExceedsAnnual =
     is1099 && deductibleOk && annualPreview !== null && deductibleEval.value > annualPreview
 
-  const canAdd = weeklyValid && (!is1099 || (deductibleOk && !deductibleExceedsAnnual))
+  const incomeOk = annualPreview !== null
+  const canAdd = incomeOk && (!is1099 || (deductibleOk && !deductibleExceedsAnnual))
 
   const handleAdd = () => {
     if (!canAdd || annualPreview === null) return
@@ -56,17 +79,20 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
       id: crypto.randomUUID(),
       name: name.trim() || `Cotizante ${suggestedNumber}`,
       contractType,
-      weeklyIncome: weeklyRounded,
+      weeklyIncome: isVariable ? round2(annualPreview / 52) : weeklyRounded,
       annualIncome: annualPreview,
       // En W-2 la clave deductible se omite por completo (Firestore rechaza undefined)
       ...(is1099 && deductibleOk ? { deductible: deductibleEval.value } : {}),
       netIncome:
         is1099 && deductibleOk ? round2(annualPreview - deductibleEval.value) : annualPreview,
+      // Solo el modo variable guarda su desglose (evita claves undefined en Firestore)
+      ...(isVariable ? { incomeMode: 'variable' as const, periods } : {}),
     }
 
     onAdd(member)
     setName('')
     setWeeklyRaw('')
+    setPeriods([nuevoPeriodo()])
     setDeductibleRaw('')
   }
 
@@ -92,32 +118,100 @@ export function MemberForm({ members, onAdd }: MemberFormProps) {
           />
         </div>
 
+        {/* Modo de estimación */}
         <div className="space-y-2">
-          <Label htmlFor="weekly-income">Ingreso semanal ($)</Label>
-          <Input
-            id="weekly-income"
-            type="text"
-            inputMode="decimal"
-            placeholder="Ej: 1,200"
-            value={weeklyRaw}
-            onChange={(e) => setWeeklyRaw(e.target.value)}
-            className="rounded-xl"
-          />
-          <AnimatePresence initial={false}>
-            {annualPreview !== null && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="text-xs text-text-secondary"
-              >
-                Ingreso anual (× 52):{' '}
-                <span className="font-medium text-neon-cyan">{formatUSD(annualPreview)}</span>
-              </motion.p>
-            )}
-          </AnimatePresence>
+          <Label>Estimación del ingreso</Label>
+          <div className="grid grid-cols-2 gap-2">
+            {MODE_OPTIONS.map((option) => {
+              const selected = incomeMode === option.value
+              const Icon = option.icon
+              return (
+                <motion.button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setIncomeMode(option.value)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    'flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left transition-all duration-200',
+                    selected
+                      ? 'border-brand/40 bg-gradient-to-r from-brand/20 to-brand-2/10 shadow-[0_0_20px_var(--brand-glow-soft)]'
+                      : 'border-border bg-foreground/[0.04] hover:border-foreground/20 hover:bg-foreground/[0.06]',
+                  )}
+                >
+                  <Icon
+                    className={cn('size-4 shrink-0', selected ? 'text-brand-strong' : 'text-text-secondary')}
+                  />
+                  <span className="min-w-0">
+                    <span
+                      className={cn(
+                        'block text-sm font-semibold',
+                        selected ? 'text-foreground' : 'text-text-secondary',
+                      )}
+                    >
+                      {option.label}
+                    </span>
+                    <span className="block text-xs text-text-secondary">{option.hint}</span>
+                  </span>
+                </motion.button>
+              )
+            })}
+          </div>
         </div>
+
+        {/* Entrada de ingreso según el modo */}
+        <AnimatePresence mode="wait" initial={false}>
+          {isVariable ? (
+            <motion.div
+              key="variable"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.2 }}
+              className="space-y-2"
+            >
+              <Label>Periodos del año</Label>
+              <p className="text-xs text-text-secondary">
+                Suma tramos de meses según cómo ganó: monto fijo, semanal o por hora.
+              </p>
+              <VariablePeriodsEditor periods={periods} onChange={setPeriods} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="estandar"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.2 }}
+              className="space-y-2"
+            >
+              <Label htmlFor="weekly-income">Ingreso semanal ($)</Label>
+              <Input
+                id="weekly-income"
+                type="text"
+                inputMode="decimal"
+                placeholder="Ej: 1,200"
+                value={weeklyRaw}
+                onChange={(e) => setWeeklyRaw(e.target.value)}
+                className="rounded-xl"
+              />
+              <AnimatePresence initial={false}>
+                {annualPreview !== null && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-xs text-text-secondary"
+                  >
+                    Ingreso anual (× 52):{' '}
+                    <span className="font-medium text-neon-cyan">{formatUSD(annualPreview)}</span>
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="space-y-2">
           <Label>Tipo de contrato</Label>

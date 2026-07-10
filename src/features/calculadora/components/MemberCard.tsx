@@ -1,17 +1,21 @@
 import { motion } from 'motion/react'
-import { X } from 'lucide-react'
+import { CalendarRange, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { formatUSD } from '@/lib/money'
 import type { Member } from '@/types/calculadora'
+import { METHOD_OPTIONS, rangeLabel } from '@/features/calculadora/incomeEstimation'
 
 interface MemberCardProps {
   member: Member
   onRemove: (id: string) => void
 }
 
+const METHOD_LABEL = Object.fromEntries(METHOD_OPTIONS.map((o) => [o.value, o.label]))
+
 export function MemberCard({ member, onRemove }: MemberCardProps) {
   const is1099 = member.contractType === '1099'
+  const isVariable = member.incomeMode === 'variable' && !!member.periods?.length
 
   return (
     <motion.div
@@ -36,6 +40,12 @@ export function MemberCard({ member, onRemove }: MemberCardProps) {
           >
             {is1099 ? '1099' : 'W-2'}
           </Badge>
+          {isVariable && (
+            <Badge className="shrink-0 gap-1 border-neon-orange/40 bg-neon-orange/10 text-[10px] text-neon-orange">
+              <CalendarRange className="size-2.5" />
+              Variable
+            </Badge>
+          )}
         </div>
         <button
           onClick={() => onRemove(member.id)}
@@ -47,14 +57,33 @@ export function MemberCard({ member, onRemove }: MemberCardProps) {
       </div>
 
       <dl className="space-y-1.5 text-xs">
-        <div className="flex justify-between">
-          <dt className="text-text-secondary">Ingreso semanal</dt>
-          <dd className="text-foreground">{formatUSD(member.weeklyIncome)}</dd>
-        </div>
-        <div className="flex justify-between">
-          <dt className="text-text-secondary">Ingreso anual (× 52)</dt>
-          <dd className="text-foreground">{formatUSD(member.annualIncome)}</dd>
-        </div>
+        {isVariable ? (
+          <>
+            {member.periods?.map((p) => (
+              <div key={p.id} className="flex justify-between gap-2">
+                <dt className="min-w-0 truncate text-text-secondary">
+                  {rangeLabel(p.startMonth, p.endMonth)} · {METHOD_LABEL[p.method]}
+                </dt>
+                <dd className="shrink-0 text-foreground">{formatUSD(p.income)}</dd>
+              </div>
+            ))}
+            <div className="flex justify-between border-t border-border pt-1.5">
+              <dt className="text-text-secondary">Ingreso anual estimado</dt>
+              <dd className="text-foreground">{formatUSD(member.annualIncome)}</dd>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Ingreso semanal</dt>
+              <dd className="text-foreground">{formatUSD(member.weeklyIncome)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Ingreso anual (× 52)</dt>
+              <dd className="text-foreground">{formatUSD(member.annualIncome)}</dd>
+            </div>
+          </>
+        )}
         {member.deductible !== undefined && (
           <div className="flex justify-between">
             <dt className="text-text-secondary">Deducible</dt>

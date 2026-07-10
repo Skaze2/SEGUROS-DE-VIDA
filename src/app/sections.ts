@@ -1,8 +1,17 @@
 import type { ComponentType } from 'react'
-import { BookOpen, Calculator, MapPinned, type LucideIcon } from 'lucide-react'
+import {
+  BookOpen,
+  Calculator,
+  FlaskConical,
+  MapPinned,
+  PhoneCall,
+  type LucideIcon,
+} from 'lucide-react'
 import { CalculadoraPage } from '@/features/calculadora/CalculadoraPage'
 import { DireccionesPage } from '@/features/direcciones/DireccionesPage'
 import { DiccionarioPage } from '@/features/diccionario/DiccionarioPage'
+import { EscenariosPage } from '@/features/escenarios/EscenariosPage'
+import { TelefonoPage } from '@/features/telefono/TelefonoPage'
 
 export interface ToolSection {
   id: string
@@ -34,5 +43,17 @@ export const SECTIONS: ToolSection[] = [
     label: 'Diccionario de términos',
     icon: BookOpen,
     component: DiccionarioPage,
+  },
+  {
+    id: 'escenarios',
+    label: 'Simulador de escenarios ACA',
+    icon: FlaskConical,
+    component: EscenariosPage,
+  },
+  {
+    id: 'telefono',
+    label: 'Origen de número telefónico',
+    icon: PhoneCall,
+    component: TelefonoPage,
   },
 ]
