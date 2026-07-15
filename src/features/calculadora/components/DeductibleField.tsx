@@ -22,7 +22,7 @@ export function DeductibleField({ value, onChange, evaluation }: DeductibleField
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="deductible">Deducible anual ($4,000 – $8,000)</Label>
+      <Label htmlFor="deductible">Deducible anual ($0 – $10,000, a tu criterio)</Label>
       <Input
         id="deductible"
         type="text"

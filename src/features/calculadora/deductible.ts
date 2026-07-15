@@ -1,7 +1,8 @@
 import { parseMoney } from '@/lib/money'
 
-export const DEDUCTIBLE_MIN = 4000
-export const DEDUCTIBLE_MAX = 8000
+// Campo libre: el agente ingresa el deducible que considere apropiado dentro de este rango.
+export const DEDUCTIBLE_MIN = 0
+export const DEDUCTIBLE_MAX = 10000
 /** Desde este valor el deducible corresponde a un caso CON hogar fiscal. */
 export const FISCAL_HOME_THRESHOLD = 6000
 
@@ -20,7 +21,7 @@ export function evaluateDeductible(raw: string): DeductibleEvaluation {
   if (Number.isNaN(value) || value < DEDUCTIBLE_MIN || value > DEDUCTIBLE_MAX) {
     return {
       status: 'invalid',
-      message: 'El deducible debe estar entre $4,000 y $8,000.',
+      message: 'El deducible debe estar entre $0 y $10,000.',
     }
   }
 
