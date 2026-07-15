@@ -49,6 +49,8 @@ export interface Calculation {
   totalIncome: number
   fplPercent: number
   fplYear: number
+  /** Estado del hogar (abreviatura, p.ej. "FL"). Ausente = tabla federal 48+DC. */
+  stateAbbr?: string
   createdAt: Timestamp | null
   updatedAt: Timestamp | null
 }

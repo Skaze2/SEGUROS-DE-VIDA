@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label'
 import { CountUp } from '@/components/shared/CountUp'
 import { GradientCard } from '@/components/shared/GradientCard'
 import { formatPercent, formatUSD } from '@/lib/money'
-import { FPL_YEAR, fplBand, fplThreshold } from '@/lib/fpl'
+import { FPL_TABLES, FPL_YEAR, fplBand, fplJurisdictionFor, fplThreshold } from '@/lib/fpl'
 
 // Lazy: echarts pesa ~400 KB y solo lo usa el gauge
 const FplGauge = lazy(() =>
@@ -18,6 +18,7 @@ interface FplResultProps {
   householdSize: number
   memberCount: number
   title: string
+  stateAbbr: string | null
   isEditing: boolean
   saving: boolean
   onTitleChange: (title: string) => void
@@ -30,6 +31,7 @@ export function FplResult({
   householdSize,
   memberCount,
   title,
+  stateAbbr,
   isEditing,
   saving,
   onTitleChange,
@@ -37,7 +39,9 @@ export function FplResult({
   onReset,
 }: FplResultProps) {
   const band = fplBand(percent)
-  const threshold = fplThreshold(householdSize)
+  const jurisdiction = fplJurisdictionFor(stateAbbr)
+  const threshold = fplThreshold(householdSize, jurisdiction)
+  const jurisdictionLabel = FPL_TABLES[jurisdiction].label
   const hasMembers = memberCount > 0
 
   return (
@@ -71,7 +75,8 @@ export function FplResult({
       </Suspense>
 
       <p className="text-center text-xs text-text-secondary">
-        Umbral FPL {FPL_YEAR} para {householdSize} {householdSize === 1 ? 'persona' : 'personas'}:{' '}
+        Umbral FPL {FPL_YEAR} ({jurisdictionLabel}) para {householdSize}{' '}
+        {householdSize === 1 ? 'persona' : 'personas'}:{' '}
         <span className="font-medium text-foreground">{formatUSD(threshold)}</span>
       </p>
 

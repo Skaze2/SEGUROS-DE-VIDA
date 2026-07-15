@@ -4,7 +4,7 @@ import { PencilLine, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 import { formatDate, round2 } from '@/lib/money'
-import { FPL_YEAR, fplPercent } from '@/lib/fpl'
+import { FPL_YEAR, fplJurisdictionFor, fplPercent } from '@/lib/fpl'
 import { useCalculations, type CalculationDraft } from '@/hooks/useCalculations'
 import type { Calculation } from '@/types/calculadora'
 import { initialSession, sessionReducer } from '@/features/calculadora/state'
@@ -26,8 +26,8 @@ export function CalculadoraPage() {
     [session.members],
   )
   const percent = useMemo(
-    () => fplPercent(totalIncome, session.householdSize),
-    [totalIncome, session.householdSize],
+    () => fplPercent(totalIncome, session.householdSize, fplJurisdictionFor(session.stateAbbr)),
+    [totalIncome, session.householdSize, session.stateAbbr],
   )
 
   const handleSave = async () => {
@@ -40,6 +40,8 @@ export function CalculadoraPage() {
       totalIncome,
       fplPercent: percent,
       fplYear: FPL_YEAR,
+      // Firestore rechaza undefined: la clave se omite si no hay estado elegido
+      ...(session.stateAbbr ? { stateAbbr: session.stateAbbr } : {}),
     }
     try {
       if (session.editingCalcId) {
@@ -66,6 +68,7 @@ export function CalculadoraPage() {
       title: calc.title,
       members: calc.members,
       householdSize: calc.householdSize,
+      stateAbbr: calc.stateAbbr ?? null,
     })
     pageTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
@@ -134,13 +137,16 @@ export function CalculadoraPage() {
             totalIncome={totalIncome}
             memberCount={session.members.length}
             householdSize={session.householdSize}
+            stateAbbr={session.stateAbbr}
             onHouseholdSizeChange={(size) => dispatch({ type: 'SET_HOUSEHOLD_SIZE', size })}
+            onStateChange={(abbr) => dispatch({ type: 'SET_STATE', abbr })}
           />
           <FplResult
             percent={percent}
             householdSize={session.householdSize}
             memberCount={session.members.length}
             title={session.title}
+            stateAbbr={session.stateAbbr}
             isEditing={session.editingCalcId !== null}
             saving={saving}
             onTitleChange={(title) => dispatch({ type: 'SET_TITLE', title })}

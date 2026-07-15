@@ -53,6 +53,11 @@ export function HistoryItem({ calc, isEditing, onEdit, onDelete }: HistoryItemPr
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-secondary">
             <span>{dateLabel}</span>
+            {calc.stateAbbr && (
+              <span className="rounded-full border border-border bg-foreground/5 px-1.5 py-px text-[10px] font-medium text-foreground">
+                {calc.stateAbbr}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1">
               <Users className="size-3" />
               {calc.members.length} {calc.members.length === 1 ? 'cotizante' : 'cotizantes'}

@@ -1,20 +1,27 @@
 import { Minus, Plus, Users, Wallet } from 'lucide-react'
 import { CountUp } from '@/components/shared/CountUp'
+import { StateCombobox } from '@/components/shared/StateCombobox'
+import { fplJurisdictionFor } from '@/lib/fpl'
 import { formatUSDWhole } from '@/lib/money'
 
 interface HouseholdSummaryProps {
   totalIncome: number
   memberCount: number
   householdSize: number
+  stateAbbr: string | null
   onHouseholdSizeChange: (size: number) => void
+  onStateChange: (abbr: string | null) => void
 }
 
 export function HouseholdSummary({
   totalIncome,
   memberCount,
   householdSize,
+  stateAbbr,
   onHouseholdSizeChange,
+  onStateChange,
 }: HouseholdSummaryProps) {
+  const jurisdiction = fplJurisdictionFor(stateAbbr)
   return (
     <div className="rounded-2xl border border-border bg-card-bg p-5 sm:p-6">
       <div className="mb-4 flex items-center gap-2.5">
@@ -67,6 +74,18 @@ export function HouseholdSummary({
             {householdSize === 1 ? 'persona' : 'personas'}
           </span>
         </div>
+      </div>
+
+      <div className="mt-5 space-y-2">
+        <label htmlFor="household-state" className="text-sm font-medium leading-none text-foreground">
+          Estado del hogar
+        </label>
+        <StateCombobox id="household-state" value={stateAbbr} onChange={onStateChange} />
+        <p className="text-[11px] leading-relaxed text-text-secondary">
+          {jurisdiction === 'contiguous'
+            ? 'El FPL es federal: los 48 estados contiguos + DC comparten la misma tabla. Solo Alaska y Hawái tienen tabla propia.'
+            : `${jurisdiction === 'AK' ? 'Alaska' : 'Hawái'} usa su propia tabla FPL del HHS (más alta por costo de vida): se aplicará automáticamente.`}
+        </p>
       </div>
     </div>
   )

@@ -25,7 +25,7 @@ npm run preview   # servir el build
 
 - `src/app/sections.ts` — **registro de herramientas del hub**. Para agregar una nueva sección al sidebar basta con añadir una entrada `{ id, label, icon, component }` a este array.
 - `src/features/calculadora/` — la calculadora completa: reducer de sesión (`state.ts`), reglas del deducible (`deductible.ts`) y componentes.
-- `src/lib/fpl.ts` — guías federales de pobreza (FPL). **Actualización anual**: cambiar `FPL_YEAR`, `FPL_BASE` y `FPL_PER_ADDITIONAL` con la publicación del HHS.
+- `src/lib/fpl.ts` — guías federales de pobreza (FPL) por jurisdicción: los 48 estados contiguos + DC comparten la tabla federal; **Alaska y Hawái tienen tabla propia** (se aplica al elegir el estado del hogar). **Actualización anual**: cambiar `FPL_YEAR` y las tres entradas de `FPL_TABLES` con la publicación del HHS.
 - `src/hooks/useCalculations.ts` — CRUD del historial en Firestore (`users/{uid}/calculations`), en vivo con `onSnapshot`.
 - `src/context/AuthContext.tsx` + `src/components/auth/` — login con Google (popup); toda la app está detrás del `AuthGuard`.
 
@@ -37,7 +37,7 @@ npm run preview   # servir el build
   - $4,000–$5,999 → mensaje "persona SIN hogar fiscal".
   - $6,000–$8,000 → mensaje "si existiese un hogar fiscal".
 - Se pueden agregar varios cotizantes (mezcla de contratos); el total del hogar es la suma de netos.
-- % FPL = total ÷ umbral(tamaño del hogar) × 100, redondeado a 1 decimal. Umbral 2025: $15,650 + $5,500 por persona adicional (48 estados contiguos).
+- % FPL = total ÷ umbral(tamaño del hogar, estado) × 100, redondeado a 1 decimal. Umbrales 2025: 48 contiguos + DC $15,650 + $5,500/persona · Alaska $19,550 + $6,880 · Hawái $17,990 + $6,330. El estado del hogar se elige con autocompletado (50 estados + DC).
 
 ## Firestore — reglas de seguridad
 

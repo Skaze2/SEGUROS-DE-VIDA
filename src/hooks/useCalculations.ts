@@ -58,6 +58,9 @@ export function useCalculations() {
             totalIncome: data.totalIncome,
             fplPercent: data.fplPercent,
             fplYear: typeof data.fplYear === 'number' ? data.fplYear : 0,
+            ...(typeof data.stateAbbr === 'string' && data.stateAbbr
+              ? { stateAbbr: data.stateAbbr }
+              : {}),
             createdAt: data.createdAt ?? null,
             updatedAt: data.updatedAt ?? null,
           })

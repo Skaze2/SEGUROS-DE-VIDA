@@ -1,4 +1,4 @@
-import { fplPercent, fplThreshold } from '@/lib/fpl'
+import { fplJurisdictionFor, fplPercent, fplThreshold } from '@/lib/fpl'
 import type { Elegibilidad, Miembro } from '@/features/escenarios/escenariosData'
 
 /** Entrada del motor: un hogar fiscal editable. */
@@ -53,11 +53,13 @@ export function evaluarHogar(hogar: Hogar): ResultadoElegibilidad {
   const miembros = hogar.miembros
   const tamanoHogar = Math.max(1, miembros.length)
   const ingreso = ingresoHogar(miembros)
-  const fpl100 = fplThreshold(tamanoHogar)
+  // Alaska y Hawái usan su propia tabla FPL del HHS; el resto comparte la federal.
+  const jurisdiccion = fplJurisdictionFor(hogar.estado)
+  const fpl100 = fplThreshold(tamanoHogar, jurisdiccion)
   // Ratio EXACTO para decidir la banda (evita que un 137.98% redondeado a 138.0
   // cruce el umbral y confunda Medicaid con subsidio). El % redondeado es solo para mostrar.
   const ratio = fpl100 > 0 ? ingreso / fpl100 : 0
-  const porcentajeFpl = fplPercent(ingreso, tamanoHogar)
+  const porcentajeFpl = fplPercent(ingreso, tamanoHogar, jurisdiccion)
 
   const miembrosInscribibles = miembros.filter(puedeInscribirse).length
   const miembrosNoInscribibles = miembros.length - miembrosInscribibles
