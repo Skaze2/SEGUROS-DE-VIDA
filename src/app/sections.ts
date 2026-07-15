@@ -3,6 +3,7 @@ import {
   BookOpen,
   Calculator,
   FlaskConical,
+  HeartPulse,
   MapPinned,
   PhoneCall,
   type LucideIcon,
@@ -12,6 +13,7 @@ import { DireccionesPage } from '@/features/direcciones/DireccionesPage'
 import { DiccionarioPage } from '@/features/diccionario/DiccionarioPage'
 import { EscenariosPage } from '@/features/escenarios/EscenariosPage'
 import { TelefonoPage } from '@/features/telefono/TelefonoPage'
+import { HealthCostsPage } from '@/features/costos-salud/HealthCostsPage'
 
 export interface ToolSection {
   id: string
@@ -55,5 +57,11 @@ export const SECTIONS: ToolSection[] = [
     label: 'Origen de número telefónico',
     icon: PhoneCall,
     component: TelefonoPage,
+  },
+  {
+    id: 'costos-salud',
+    label: 'Estándares de costos de salud',
+    icon: HeartPulse,
+    component: HealthCostsPage,
   },
 ]
